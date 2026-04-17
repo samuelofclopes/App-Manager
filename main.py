@@ -38,18 +38,18 @@ apps_upper = {app.upper(): apps[app] for app in sorted(apps)}
 
 
 # Execussão do código no terminal
-def escolha(esc):
+def escolha(type, esc):
     try:
-        resultado = subprocess.run(["winget", "update", apps_upper[esc]], capture_output=True, text=True) # Captura o output e transforma de bytes para texto
+        resultado = subprocess.run(["winget", type, apps_upper[esc]], capture_output=True, text=True) # Captura o output e transforma de bytes para texto
         print(resultado.stdout.splitlines()[-1]) # Printa o resultado
-    except ValueError:
-        print("Nenhuma app encontrada. | no app found.")
+    except KeyError:
+        print("No app found.")
             
 
 while True:
     print("========================================================================================================================================")
-    print("Bem vindo ao instalador de apps | Welcome to app installer\n" \
-          "Escolhe das apps indicadas a baixo as que gostarias de instalar. | Choose from the apps listed below the ones you would like to install.\n")
+    print("Welcome to app installer\n" \
+          "Choose from the apps listed below the ones you would like to install / update / uninstall.\n")
     print("========================================================================================================================================")
     for i in range(0, len(apps_abc) - 3, 1):
         if i & 3 == 0:
@@ -57,15 +57,18 @@ while True:
         print(" | " + apps_abc[i] + (" " * (len(max(apps_abc, key=len)) - len(apps_abc[i]))), end="")
         
     print("\n\n\n========================================================================================================================================")
-    escolha(input("\nInsira o nome | Enter the name: ").strip().upper())
+    action = input("What you want to do? [Install / Update / Uninstall]").strip().upper()
+    while action not in ["INSTALL", "UPDATE", "UNINSTALL"]:
+        action = input("Invalid option, try again [Install / Update / Uninstall]").strip().upper()
+    escolha(action, input("\nEnter the name: ").strip().upper())
     print("========================================================================================================================================")
-    mais = input("Deseja instalar mais algo? [S/N]| Do you want to install something else? [Y/N]: ").upper()
+    mais = input("Do you want to do something else? [Y/N]: ").upper()
 
+    while mais not in ["YES", "Y", "SIM", "S", "NO", "N", "NÃO", "NAO"]:
+            mais = input("\n\nInvalid option, try again: ").strip().upper()
     if mais in ["YES", "Y", "SIM", "S"]:
         os.system('cls')
         continue
     elif mais in ["NO", "N", "NÃO", "NAO"]:
         break
-    else:
-        while mais not in ["YES", "Y", "SIM", "S", "NO", "N", "NÃO", "NAO"]:
-            mais = input("\n\nOpção invalida, escolha denovo | Invalid option, choose again: ")
+        
