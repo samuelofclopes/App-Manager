@@ -4,6 +4,7 @@ import platform
 
 system = platform.system()
 
+# DICIONÁRIO DE APPS PARA CADA SISTEMA OPERACIONAL
 if system == "Windows":
     Sys_installer = ["winget"]
     apps = {
@@ -138,6 +139,7 @@ elif system == "Darwin":
     "GIMP": "gimp"
     }
 
+# ACÕES PARA CADA SISTEMA OPERACIONAL
 systemact = {
     "Windows": {
         "INSTALL": ["install"],
@@ -155,6 +157,8 @@ systemact = {
         "UNINSTALL": ["uninstall"]
     }
 }
+
+
 # Lista das apps em ordem alfabética
 apps_abc = sorted(apps)
 
@@ -167,38 +171,51 @@ apps_upper = {app.upper(): apps[app] for app in sorted(apps)}
 # Execussão do código no terminal
 def escolha(esc):
     try:
-        resultado = subprocess.run(esc, capture_output=False, text=True) # Captura o output e transforma de bytes para texto
-        #print(resultado.stdout.splitlines()[-1]) # Printa o resultado
+        subprocess.run(esc, capture_output=False, text=True)
     except KeyError:
         print("No app found.")
             
 
 while True:
-    print("=" * 80) # =======================================================================================================
-    print("Welcome to app installer\n" \
-          "Choose from the apps listed below the ones you would like to install / upgrade / uninstall.\n")
-    print("=" * 80) # =======================================================================================================
-    
+    # ==================================================================================================================================
+    print("=" * 80)
+    print("Welcome to app installer\nChoose from the apps listed below the ones you would like to install / upgrade / uninstall.\n")
+    print("=" * 80) 
+    # ==================================================================================================================================
+
+
+    # ==================================================================================================================================
     # PRINTA A TABELA
     for i in range(0, len(apps_abc) - 3, 1):
         if i & 3 == 0:
             print("\n")
         print(" | " + apps_abc[i] + (" " * (len(max(apps_abc, key=len)) - len(apps_abc[i]))), end="")
         
-    print("\n\n\n" + "=" * 80) # =======================================================================================================
-    
+    print("\n\n\n" + "=" * 80)
+    # ==================================================================================================================================
+
+
+    # ==================================================================================================================================
     # EXECUTA O QUE É PEDIDO
-    action = input("What you want to do? [Install / Upgrade / Uninstall]").strip().upper()
-    while action not in ["INSTALL", "UPGRADE", "UNINSTALL"]:
+    action = input("What you want to do? [Install / Upgrade / Uninstall]").strip().upper() # Escolha do que será feito.
+    while action not in ["INSTALL", "UPGRADE", "UNINSTALL"]: # Força o usuário a escolher uma opção válida.
         action = input("Invalid option, try again [Install / Upgrade / Uninstall]").strip().upper()
-    choosed_app = ""
+    # =====================================
+    
+    choosed_app = input(f"\nChoose one app to {action.lower()}: ").strip().upper()
     while choosed_app not in apps_upper:
         choosed_app = input("\nInvalid app name, try again: ").strip().upper()
-    command = Sys_installer + systemact[system][action] + [apps_upper[choosed_app]]
-    escolha(command)
+    # =====================================
+    command = Sys_installer + systemact[system][action] + [apps_upper[choosed_app]] # Junta as listas do installador, da ação e do codigo da aplicação escolhida.
+    try:
+        subprocess.run(command, capture_output=False, text=True) # Executa o comando no terminal.
+    except KeyError: # Se falhar, printa que a app não foi encontrada.
+        print("No app as been found.")
+    print("=" * 80)
+    # ==================================================================================================================================
 
-    print("=" * 80) # =======================================================================================================
-    
+
+    # ==================================================================================================================================
     # CONTINUA OU PARA O CODIGO
     mais = input("Do you want to do something else? [Y/N]: ").upper()
 
@@ -209,3 +226,4 @@ while True:
         continue
     elif mais in ["NO", "N", "NÃO", "NAO"]:
         break
+    # ==================================================================================================================================
