@@ -10,7 +10,7 @@ if system == "Windows":
     apps = {
     "VSCode": "Microsoft.VisualStudioCode", 
     "IntelliJ": "JetBrains.IntelliJIDEA.Community", 
-    "WebStorm": "JetBrains.WebStorm ", 
+    "WebStorm": "JetBrains.WebStorm", 
     "PyCharm": "JetBrains.PyCharm", 
     "Git": "Git.Git", 
     "GitHub": "GitHub.GitHubDesktop", 
@@ -38,7 +38,7 @@ elif system == "Linux":
     "Docker": "docker.io", 
     "HTOP": "htop",
     "Vim": "vim",
-    "Neofetch": "neofetch",
+    "Neofetch": "fastfetch",
     "Curl": "curl",
     "Wget": "wget",
     "Tmux": "tmux",
@@ -63,7 +63,7 @@ elif system == "Linux":
     "Valgrind": "valgrind",
     "Strace": "strace",
     "Ag": "silversearcher-ag",
-    "Exuberant Ctags": "exctags",
+    "Exuberant Ctags": "exuberant-ctags",
     "Mosh": "mosh",
     "VS Code (OSS)": "code-oss",
     "Geany": "geany",
@@ -76,7 +76,8 @@ elif system == "Linux":
     "Pitivi": "pitivi",
     "Blender": "blender",
     "Inkscape": "inkscape",
-    "GIMP": "gimp"
+    "GIMP": "gimp",
+    "GitHub CLI": "gh"
     }
 elif system == "Darwin":
     Sys_installer = ["brew"]
@@ -208,6 +209,8 @@ while True:
     # =====================================
     command = Sys_installer + systemact[system][action] + [apps_upper[choosed_app]] # Junta as listas do installador, da ação e do codigo da aplicação escolhida.
     try:
+        if system == "Linux":
+            subprocess.run("sudo apt update", shell=True)
         subprocess.run(command, capture_output=False, text=True) # Executa o comando no terminal.
     except KeyError: # Se falhar, printa que a app não foi encontrada.
         print("No app as been found.")
